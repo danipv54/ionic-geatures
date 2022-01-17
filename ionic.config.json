@@ -1,0 +1,7 @@
+{
+  "name": "geatures",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

@@ -1,0 +1,6 @@
+{
+	"appId": "io.ionic.starter",
+	"appName": "geatures",
+	"webDir": "www",
+	"bundledWebRuntime": false
+}

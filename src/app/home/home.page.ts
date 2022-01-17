@@ -8,12 +8,55 @@ import { AnimationController, GestureController } from '@ionic/angular';
 })
 export class HomePage implements AfterViewInit {
 
-@ViewChild('box') box: ElementRef;
+  @ViewChild('powebtn', {read: ElementRef }) powerbtn: ElementRef;
+
+  power=0;
+  longPressActive= false;
+
+
   constructor(private gestureCtrl: GestureController, private animationCtrl: AnimationController) {}
 
 
   ngAfterViewInit(): void {
-    const moveGesture=  this.gestureCtrl.create({
+
+    const longpress= this.gestureCtrl.create({
+      el:this.powerbtn.nativeElement,
+      gestureName:'power',
+      threshold:0,
+      onStart: ()=>{
+        this.longPressActive=true;
+        this.onprogress();
+
+      },
+      onEnd:()=>{
+        this.longPressActive=false;
+      }
+    },true);
+    longpress.enable();
+  }
+
+
+  onprogress(timeout=1000){
+
+    setTimeout(()=>{
+  if(this.longPressActive){
+    this.power++;
+    this.onprogress(timeout / 1.2);
+
+    console.log(this.power);
+  }
+    },timeout);
+
+  }
+}
+
+
+
+
+
+/*
+
+const moveGesture=  this.gestureCtrl.create({
     el:this.box.nativeElement,
     gestureName:'move',
     threshold:0,
@@ -41,4 +84,4 @@ export class HomePage implements AfterViewInit {
 
   simpleAnimation.play();
   }
-}
+*/

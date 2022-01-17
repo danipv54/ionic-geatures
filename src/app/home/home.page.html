@@ -7,7 +7,12 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-button (click)="onAnimation()">Animation</ion-button>
+  <ion-button #powebtn tapple  expand="full">
+    Power {{power}}
+<ion-icon name="flame" slot="end"></ion-icon>
+  </ion-button>
+
+  <!-- <ion-button (click)="onAnimation()">Animation</ion-button>
   <br>
-<div #box [ngStyle]="{'width': '100px', 'height': '100px', 'background': 'var(--ion-color-primary)'}"></div>
+<div #box [ngStyle]="{'width': '100px', 'height': '100px', 'background': 'var(--ion-color-primary)'}"></div> -->
 </ion-content>

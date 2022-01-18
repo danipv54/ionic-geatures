@@ -1,5 +1,6 @@
-import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
-import { AnimationController, GestureController } from '@ionic/angular';
+import { AfterViewInit, Component, ElementRef, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { AnimationController, GestureController, IonCard, Platform } from '@ionic/angular';
+import { PEOPLE } from 'src/assets/data';
 
 @Component({
   selector: 'app-home',
@@ -7,38 +8,55 @@ import { AnimationController, GestureController } from '@ionic/angular';
   styleUrls: ['home.page.scss'],
 })
 export class HomePage implements AfterViewInit {
+  @ViewChildren(IonCard, {read: ElementRef }) cards: QueryList<ElementRef>;
 
-@ViewChild('box') box: ElementRef;
-  constructor(private gestureCtrl: GestureController, private animationCtrl: AnimationController) {}
+  power=0;
+  longPressActive= false;
+  people=PEOPLE;
 
+  constructor(private gestureCtrl: GestureController, private animationCtrl: AnimationController,
+              private plt: Platform) {}
 
   ngAfterViewInit(): void {
-    const moveGesture=  this.gestureCtrl.create({
-    el:this.box.nativeElement,
-    gestureName:'move',
-    threshold:0,
-    onStart:ev=>{
-      console.log('Start');
-    },
-    onMove:ev=>{
-    const curretX= ev.deltaX;
-    const curretY= ev.deltaY;
+    this.addTinderSwipe(this.cards.toArray());
+  }
 
-    this.box.nativeElement.style.transform= `translate(${curretX}px, ${curretY}px )`;
-     },
-    onEnd:ev=>{
-      console.log('end');
-    }
+addTinderSwipe(cardsArray: ElementRef<any>[]){
+  const index=0;
+
+  for (let i=0; i < cardsArray.length; i++) {
+    const cards= cardsArray[i];
+    const card= cards.nativeElement.style;
+     const swipe= this.gestureCtrl.create({
+      el:cards.nativeElement,
+      gestureName:`swipe-${i}`,
+      threshold:0,
+      onStart:() =>{
+        card.transition='.5s ease-out';
+      },
+      onMove: ev=>{
+        card.transform= `translateX(${ev.deltaX}px) rotate(${ev.deltaX / 10}deg) `;
+        const color = ev.deltaX < 0 ? `var(--ion-color-danger)` : 'var(--ion-color-success)';
+        card.background= color;
+      },
+
+      onEnd:ev =>{
+        card.transition='.5s ease-out';
+
+        if ( ev.deltaX > 150 ){
+          card.transform= `translateX(${this.plt.width() * 2}px) rotate(${ev.deltaX / 10}deg) `;
+
+        } else if ( ev.deltaX < -150 ){
+          card.transform= `translateX(${-this.plt.width() * 2}px) rotate(${ev.deltaX / 10}deg) `;
+
+        } else {
+          card.transform='';
+          card.background='';
+        }
+      }
     });
-   moveGesture.enable();
+    swipe.enable();
   }
-  onAnimation(){
-  const simpleAnimation= this.animationCtrl.create('whatever')
-  .addElement(this.box.nativeElement)
-  .duration(1500)
-  .easing('ease-out')
-  .fromTo('transform', 'rotate(0deg)', 'rotate(360deg)');
-
-  simpleAnimation.play();
-  }
+ }
 }
+

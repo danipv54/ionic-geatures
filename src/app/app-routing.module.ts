@@ -8,8 +8,12 @@ const routes: Routes = [
   },
   {
     path: '',
-    redirectTo: 'home',
+    redirectTo: 'swipe',
     pathMatch: 'full'
+  },
+  {
+    path: 'swipe',
+    loadChildren: () => import('./swipe/swipe.module').then( m => m.SwipePageModule)
   },
 ];
 

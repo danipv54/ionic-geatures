@@ -1,0 +1,15 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Contacts List</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+<ion-list>
+  <app-swipe-item *ngFor="let person of people; last as islast" [person]="person"
+   (itemDeleted)="removeMail(person.id)"
+   [class.drop-background]="islast"
+
+  ></app-swipe-item>
+</ion-list>
+</ion-content>
